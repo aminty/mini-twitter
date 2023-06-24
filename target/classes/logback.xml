@@ -1,0 +1,10 @@
+<configuration>
+    <!-- Other logback configuration -->
+
+    <logger name="org.hibernate" level="OFF" />
+
+    <!-- Root logger configuration -->
+    <root level="INFO">
+        <!-- Appenders and other configurations for the root logger -->
+    </root>
+</configuration>
