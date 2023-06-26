@@ -4,6 +4,7 @@ import twitter.domain.User;
 import twitter.ui.Printer;
 import twitter.util.ApplicationContext;
 import twitter.util.Constant;
+import twitter.util.SecurityContext;
 
 import java.util.Scanner;
 
@@ -20,6 +21,7 @@ public class UserMenu {
         Printer.printDescription("Enter your lastname: ");
         newUser.setLastname(scanner.next().trim());
 
+        scanner.nextLine();
         Printer.printDescription("Enter your bio: ");
         newUser.setBio(scanner.nextLine().trim());
 
@@ -51,7 +53,8 @@ public class UserMenu {
         while (true) {
             Printer.printDescription("Enter your username: ");
             String username = scanner.next().trim();
-            if (username.trim().isEmpty()||ApplicationContext.getUserService().isUserExistsByUsername(username))
+            if (username.trim().isEmpty()
+                    || ApplicationContext.getUserService().isUserExistsByUsername(username))
                 Printer.printWarning("use another username");
             else return username;
         }
@@ -62,6 +65,7 @@ public class UserMenu {
         while (true) {
             Printer.printDescription("Enter your credentials in this format(username/email,password): ");
             String[] credentials = scanner.next().trim().split(",");
+            if (credentials[0].equals("back")) break;
             if (credentials.length < 2)
                 Printer.printWarning("Credential format is incorrect!");
             else {
@@ -100,6 +104,7 @@ public class UserMenu {
                 case "6" :{
                     signOut();
                     isLoggedIn=false;
+                    break;
                 }
                 default:
                     Printer.printWarning("Wrong input");
@@ -109,5 +114,9 @@ public class UserMenu {
     }
 
     private static void signOut() {
+        SecurityContext.id=0L;
+        SecurityContext.username="";
+        SecurityContext.email="";
+
     }
 }

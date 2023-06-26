@@ -1,15 +1,11 @@
 package twitter.luncher;
 
-import twitter.domain.User;
-import twitter.service.UserService;
-import twitter.ui.Menu;
-import twitter.util.ApplicationContext;
-
-import javax.persistence.EntityManager;
+import twitter.ui.menu.AccountMenu;
+import twitter.ui.menu.MainMenu;
 
 public class Main {
     public static void main(String[] args) {
-        Menu.run();
+        MainMenu.run();
 
     }
 }

@@ -23,6 +23,7 @@ public abstract class BaseRepositoryImpl
         beginTransaction();
         entity = saveWithoutTransaction(entity);
         commitTransaction();
+        em.clear();
         return entity;
     }
 
@@ -77,8 +78,11 @@ public abstract class BaseRepositoryImpl
 
     @Override
     public void commitTransaction() {
-        if (em.getTransaction().isActive())
+        if (em.getTransaction().isActive()) {
             em.getTransaction().commit();
+        }
+
+
 
     }
 

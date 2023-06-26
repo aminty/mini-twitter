@@ -1,15 +1,12 @@
-package twitter.ui;
+package twitter.ui.menu;
 
-import twitter.domain.User;
+import twitter.ui.Printer;
 import twitter.ui.menu.UserMenu;
-import twitter.util.ApplicationContext;
 import twitter.util.Constant;
-import twitter.util.SecurityContext;
 
-import javax.swing.*;
 import java.util.Scanner;
 
-public class Menu {
+public class MainMenu {
 
     public static void run() {
         Printer.printBanner();

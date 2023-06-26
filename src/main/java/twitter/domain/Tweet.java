@@ -10,6 +10,7 @@ import twitter.base.domain.BaseEntity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,14 +21,14 @@ import java.util.List;
 @Setter
 public class Tweet extends BaseEntity<Long> {
 
-    @ManyToOne
+    @ManyToOne()
     private User owner;
 
     @OneToMany(mappedBy = "tweetComment")
-    private List<Comment> comments;
+    private List<Comment> comments=new ArrayList<>();
 
     @OneToMany(mappedBy = "tweetLike")
-    private List<Like> likes;
+    private List<Like> likes=new ArrayList<>();
 
 
     @Column(name = "message")

@@ -10,6 +10,7 @@ import twitter.base.domain.BaseEntity;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -45,6 +46,10 @@ public class User extends BaseEntity<Long> {
 
     @ManyToMany(mappedBy = "follower")
     private Set<User> following=new HashSet<User>();
+
+
+    @OneToMany(mappedBy = "owner")
+    private List<Tweet> tweets;
 
 
 

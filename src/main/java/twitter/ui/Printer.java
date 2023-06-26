@@ -1,5 +1,10 @@
 package twitter.ui;
 
+import twitter.domain.Tweet;
+import twitter.util.SecurityContext;
+
+import java.util.List;
+
 public class Printer {
 
     public static void printBanner(){
@@ -37,5 +42,27 @@ public class Printer {
 
     public static void printMessage(String input) {
         System.out.println(input);
+    }
+
+    public static void printProfile(String... input){
+        System.out.println("|---------------------------------");
+        System.out.println("|>>HOME welcome dear "+ SecurityContext.username);
+        System.out.println("|");
+        System.out.println("|   tweets: "+input[0] +"   "+ "followers: "+ input[1] + "   following: "+ input[2]);
+        System.out.println("|");
+        System.out.println("|   Message: " +input[3]);
+
+
+
+
+    }
+
+    public static void printTweets(List<Tweet> tweets) {
+        for (int i = 0; i < tweets.size(); i++) {
+            System.out.println("|*********************************");
+            System.out.println("| "+(i+1)+" ) "+ tweets.get(i).getMessage());
+            System.out.println("|     id: "+tweets.get(i).getId()+"     like: "+tweets.get(i).getLikes().size()
+                    +"    comment: "+tweets.get(0).getComments().size());
+        }
     }
 }
