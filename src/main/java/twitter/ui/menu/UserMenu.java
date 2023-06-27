@@ -88,7 +88,7 @@ public class UserMenu {
             String chosenItem = new Scanner(System.in).next();
             switch (chosenItem) {
                 case "1":
-                    AccountMenu.showTweets();
+                    AccountMenu.showNewTweets();
                     break;
                 case "2":
                     AccountMenu.home();

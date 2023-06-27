@@ -7,8 +7,7 @@ import twitter.ui.Printer;
 import twitter.util.ApplicationContext;
 import twitter.util.SecurityContext;
 
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class AccountMenu {
 
@@ -50,7 +49,19 @@ public class AccountMenu {
 
 
     }
-    static void showTweets() {
+    static void showNewTweets() {
+        Optional<User> currentUser = ApplicationContext.getUserService().findById(SecurityContext.id);
+        if (currentUser.isPresent()){
+            Set<User> following=currentUser.get().getFollowing();
+            List<Tweet> allFollowingTweets=new ArrayList<>(currentUser.get().getTweets());
+            for (User followingUser :
+                    following) {
+                List<Tweet> tweetsOfEachUser = followingUser.getTweets();
+                allFollowingTweets.addAll(tweetsOfEachUser);
+            }
+            allFollowingTweets.sort(Comparator.comparing(Tweet::getCreatedAt));
+            Printer.printTweets(allFollowingTweets);
+        }
 
 
     }
