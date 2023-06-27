@@ -1,11 +1,13 @@
 package twitter.ui.menu;
 
+import twitter.domain.DirectMessage;
 import twitter.domain.Tweet;
 import twitter.domain.User;
 import twitter.ui.Printer;
 import twitter.util.ApplicationContext;
 import twitter.util.SecurityContext;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class AccountMenu {
@@ -36,17 +38,18 @@ public class AccountMenu {
 
     static void home() {
         User user=ApplicationContext.getUserService().findById(SecurityContext.id).get();
+        List<DirectMessage> directMessage=
+                ApplicationContext.getDirectMessage().findAllMessageByReceiverById(user);
         Printer.printProfile(String.valueOf(user.getTweets().size())
                 , String.valueOf(user.getFollower().size())
                 , String.valueOf(user.getFollowing().size())
-                ,"6");
+                , String.valueOf(directMessage.size()));
 
         Printer.printTweets(user.getTweets());
 
 
 
     }
-
     static void showTweets() {
 
 

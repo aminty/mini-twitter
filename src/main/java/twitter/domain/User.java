@@ -38,8 +38,8 @@ public class User extends BaseEntity<Long> {
 
     @ManyToMany
     @JoinTable(
-                    name = "follower_table",
-                    joinColumns = @JoinColumn(name = "user_id"),
+                    name = "follow_table",
+                    joinColumns = @JoinColumn(name = "following"),
                     inverseJoinColumns = @JoinColumn(name = "follower_id")
     )
     private Set<User> follower=new HashSet<User>();

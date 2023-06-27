@@ -1,11 +1,16 @@
 package twitter.util;
 
+import twitter.domain.DirectMessage;
+import twitter.repository.DirectMessageRepository;
 import twitter.repository.TweetRepository;
 import twitter.repository.UserRepository;
+import twitter.repository.impl.DirectMessageImpl;
 import twitter.repository.impl.TweetRepositoryImpl;
 import twitter.repository.impl.UserRepositoryImpl;
+import twitter.service.DirectMessageService;
 import twitter.service.TweetService;
 import twitter.service.UserService;
+import twitter.service.impl.DirectMessageServiceImpl;
 import twitter.service.impl.TweetServiceImpl;
 import twitter.service.impl.UserServiceImpl;
 
@@ -15,13 +20,15 @@ import javax.persistence.Persistence;
 
 public class ApplicationContext {
 
-    private static final EntityManagerFactory emf;
-    private static final EntityManager em;
+     static final EntityManagerFactory emf;
+     static final EntityManager em;
 
     private static final UserRepository userRepository;
     private static final UserService userService;
     private static final TweetRepository tweetRepository;
     private static final TweetService tweetService;
+    private static final DirectMessageRepository directMsgRepository;
+    private static final DirectMessageService directMsgService;
 
 
     static {
@@ -31,6 +38,8 @@ public class ApplicationContext {
        userService=new UserServiceImpl(userRepository);
        tweetRepository=new TweetRepositoryImpl(em);
        tweetService=new TweetServiceImpl(tweetRepository);
+       directMsgRepository=new DirectMessageImpl(em);
+       directMsgService=new DirectMessageServiceImpl(directMsgRepository);
     }
 
     public static UserService getUserService(){
@@ -42,6 +51,7 @@ public class ApplicationContext {
     }
 
 
-
-
+    public static DirectMessageService getDirectMessage() {
+        return directMsgService;
+    }
 }
