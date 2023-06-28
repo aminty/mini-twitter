@@ -7,7 +7,7 @@ import twitter.repository.CommentRepository;
 import twitter.service.CommentService;
 
 public class CommentServiceImpl extends BaseServiceImpl<Comment,Long, CommentRepository>
-        implements CommentRepository {
+        implements CommentService {
 
 
     public CommentServiceImpl(CommentRepository repository) {

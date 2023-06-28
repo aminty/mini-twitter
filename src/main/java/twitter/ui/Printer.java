@@ -60,9 +60,17 @@ public class Printer {
     public static void printTweets(List<Tweet> tweets) {
         for (int i = 0; i < tweets.size(); i++) {
             System.out.println("|*********************************");
-            System.out.println("| "+(i+1)+" ) "+ tweets.get(i).getMessage());
-            System.out.println("|     id: "+tweets.get(i).getId()+"     like: "+tweets.get(i).getLikes().size()
-                    +"    comment: "+tweets.get(0).getComments().size());
+            System.out.println("| "+(tweets.get(i).getId())+" ) "+ tweets.get(i).getMessage());
+            System.out.println("|     like: "+tweets.get(i).getLikes().size()
+                    +"    comment: "+tweets.get(i).getComments().size());
+        }
+    }
+
+    public static void showComments(Tweet tweets) {
+        for (int i = 0; i < tweets.getComments().size(); i++) {
+            System.out.println("|*********************************");
+            System.out.println("| "+(tweets.getComments().get(i).getId())+" ) "+ tweets.getComments().get(i).getMessage());
+            System.out.println("|     writer: "+tweets.getComments().get(i).getCommentOwner().getUsername());
         }
     }
 }
