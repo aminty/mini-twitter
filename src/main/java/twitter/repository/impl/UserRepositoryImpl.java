@@ -8,7 +8,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class UserRepositoryImpl extends BaseRepositoryImpl<User, Long> implements UserRepository {
 
@@ -67,5 +73,18 @@ public class UserRepositoryImpl extends BaseRepositoryImpl<User, Long> implement
         } catch (NoResultException ex) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<User> findUser(String title) {
+        CriteriaBuilder criteriaBuilder=em.getCriteriaBuilder();
+        CriteriaQuery<User> criteriaQuery=criteriaBuilder.createQuery(User.class);
+        Root<User> from = criteriaQuery.from(User.class);
+        Predicate firstNamePredicate = criteriaBuilder.like(from.get("firstname"), "%" + title + "%"); // Create a predicate for matching firstName
+        Predicate lastNamePredicate = criteriaBuilder.like(from.get("lastname"), "%" + title + "%"); // Create a predicate for matching lastName
+        Predicate usernamePredicate = criteriaBuilder.like(from.get("username"), "%" + title + "%"); // Create a predicate for matching u
+        Predicate finalPredicate    = criteriaBuilder.or(firstNamePredicate,lastNamePredicate,usernamePredicate);
+        criteriaQuery.select(from).where(finalPredicate);
+        return em.createQuery(criteriaQuery).getResultList();
     }
 }

@@ -4,11 +4,11 @@ import twitter.base.service.BaseServiceImpl;
 import twitter.domain.User;
 import twitter.repository.UserRepository;
 import twitter.service.UserService;
-import twitter.ui.Printer;
 import twitter.util.SecurityContext;
 
-import javax.persistence.TypedQuery;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class UserServiceImpl extends BaseServiceImpl<User, Long, UserRepository> implements UserService {
@@ -62,5 +62,10 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long, UserRepository>
     public boolean isValidEmailPattern(String email) {
         String emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
         return Pattern.matches(emailRegex,email);
+    }
+
+    @Override
+    public List<User> findUser(String title) {
+        return repository.findUser(title);
     }
 }

@@ -96,12 +96,14 @@ public class UserMenu {
                 case "3":
                     AccountMenu.createNewTweet();
                 case "4":
+                    AccountMenu.searchAndFollow();
+                case "5":
                     AccountMenu.checkDirect();
                     break;
-                case "5":
+                case "6":
                     AccountMenu.editProfile();
                     break;
-                case "6" :{
+                case "7" :{
                     signOut();
                     isLoggedIn=false;
                     break;

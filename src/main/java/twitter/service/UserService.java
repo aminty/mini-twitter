@@ -3,7 +3,8 @@ package twitter.service;
 import twitter.base.service.BaseService;
 import twitter.domain.User;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.Set;
 
 public interface UserService extends BaseService<User,Long> {
 
@@ -16,6 +17,5 @@ public interface UserService extends BaseService<User,Long> {
 
     boolean isValidEmailPattern(String email);
 
-
-
+    List<User> findUser(String title);
 }

@@ -1,6 +1,7 @@
 package twitter.ui;
 
 import twitter.domain.Tweet;
+import twitter.domain.User;
 import twitter.util.SecurityContext;
 
 import java.util.List;
@@ -71,6 +72,16 @@ public class Printer {
             System.out.println("|*********************************");
             System.out.println("| "+(tweets.getComments().get(i).getId())+" ) "+ tweets.getComments().get(i).getMessage());
             System.out.println("|     writer: "+tweets.getComments().get(i).getCommentOwner().getUsername());
+        }
+    }
+
+    public static void printUser(List<User> listOfFoundUser) {
+        for (int i = 0; i < listOfFoundUser.size(); i++) {
+            System.out.println("id: "+listOfFoundUser.get(i).getId()+
+                    ", name: "+listOfFoundUser.get(i).getFirstname() +" "+ listOfFoundUser.get(i).getLastname() +
+                    ", username: "+listOfFoundUser.get(i).getUsername()+
+                    ", following: "+listOfFoundUser.get(i).getFollowing().size()+
+                    ", follower: "+listOfFoundUser.get(i).getFollower().size());
         }
     }
 }
