@@ -26,7 +26,7 @@ public class DirectMessageImpl extends BaseRepositoryImpl<DirectMessage, Long> i
     @Override
     public List<DirectMessage> findAllMessageByReceiverById(User user) {
         TypedQuery<DirectMessage> query =
-                em.createQuery("FROM DirectMessage  WHERE receiver= :user AND isRead= false ",getEntityClass());
+                em.createQuery("FROM DirectMessage  WHERE receiver= :user ",getEntityClass());
         return query.setParameter("user",user).getResultList();
 
     }

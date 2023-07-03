@@ -1,5 +1,6 @@
 package twitter.ui;
 
+import twitter.domain.DirectMessage;
 import twitter.domain.Tweet;
 import twitter.domain.User;
 import twitter.util.SecurityContext;
@@ -8,7 +9,7 @@ import java.util.List;
 
 public class Printer {
 
-    public static void printBanner(){
+    public static void printBanner() {
         System.out.println("" +
                 " ______  __    __  ____  ______  ______    ___  ____  \n" +
                 "|      T|  T__T  Tl    j|      T|      T  /  _]|    \\ \n" +
@@ -21,13 +22,13 @@ public class Printer {
 
     }
 
-    public static void printItem(String [] item,String title){
+    public static void printItem(String[] item, String title) {
 
-            System.out.println("----------------------------");
-            System.out.println("          "+title+"         ");
-            System.out.println("----------------------------");
+        System.out.println("----------------------------");
+        System.out.println("          " + title + "         ");
+        System.out.println("----------------------------");
         for (int i = 0; i < item.length; i++) {
-            System.out.println("|"+(i+1) +  " - " + item[i]) ;
+            System.out.println("|" + (i + 1) + " - " + item[i]);
         }
 
     }
@@ -45,15 +46,13 @@ public class Printer {
         System.out.println(input);
     }
 
-    public static void printProfile(String... input){
+    public static void printProfile(String... input) {
         System.out.println("|---------------------------------");
-        System.out.println("|>>HOME welcome dear "+ SecurityContext.username);
+        System.out.println("|>>HOME welcome dear " + SecurityContext.username);
         System.out.println("|");
-        System.out.println("|   tweets: "+input[0] +"   "+ "followers: "+ input[1] + "   following: "+ input[2]);
+        System.out.println("|   tweets: " + input[0] + "   " + "followers: " + input[1] + "   following: " + input[2]);
         System.out.println("|");
-        System.out.println("|   Message: " +input[3]);
-
-
+        System.out.println("|   Message: " + input[3]);
 
 
     }
@@ -61,27 +60,57 @@ public class Printer {
     public static void printTweets(List<Tweet> tweets) {
         for (int i = 0; i < tweets.size(); i++) {
             System.out.println("|*********************************");
-            System.out.println("| "+(tweets.get(i).getId())+" ) "+ tweets.get(i).getMessage());
-            System.out.println("|     like: "+tweets.get(i).getLikes().size()
-                    +"    comment: "+tweets.get(i).getComments().size());
+            System.out.println("| " + (tweets.get(i).getId()) + " ) " + tweets.get(i).getMessage());
+            System.out.println("|     like: " + tweets.get(i).getLikes().size()
+                    + "    comment: " + tweets.get(i).getComments().size());
         }
     }
 
     public static void showComments(Tweet tweets) {
         for (int i = 0; i < tweets.getComments().size(); i++) {
             System.out.println("|*********************************");
-            System.out.println("| "+(tweets.getComments().get(i).getId())+" ) "+ tweets.getComments().get(i).getMessage());
-            System.out.println("|     writer: "+tweets.getComments().get(i).getCommentOwner().getUsername());
+            System.out.println("| " + (tweets.getComments().get(i).getId()) + " ) " + tweets.getComments().get(i).getMessage());
+            System.out.println("|     writer: " + tweets.getComments().get(i).getCommentOwner().getUsername());
         }
     }
 
     public static void printUser(List<User> listOfFoundUser) {
         for (int i = 0; i < listOfFoundUser.size(); i++) {
-            System.out.println("id: "+listOfFoundUser.get(i).getId()+
-                    ", name: "+listOfFoundUser.get(i).getFirstname() +" "+ listOfFoundUser.get(i).getLastname() +
-                    ", username: "+listOfFoundUser.get(i).getUsername()+
-                    ", following: "+listOfFoundUser.get(i).getFollowing().size()+
-                    ", follower: "+listOfFoundUser.get(i).getFollower().size());
+            System.out.println("id: " + listOfFoundUser.get(i).getId() +
+                    ", name: " + listOfFoundUser.get(i).getFirstname() + " " + listOfFoundUser.get(i).getLastname() +
+                    ", username: " + listOfFoundUser.get(i).getUsername() +
+                    ", following: " + listOfFoundUser.get(i).getFollowing().size() +
+                    ", follower: " + listOfFoundUser.get(i).getFollower().size());
         }
+    }
+
+    public static void printUnreadDirectMsg(List<DirectMessage> messages) {
+        long count = messages.stream().filter(msg -> !msg.isRead()).count();
+        System.out.println("|*********************************");
+        System.out.println(">>> Unread msg: " + count);
+        messages.forEach(msg -> {
+            if (!msg.isRead()) {
+                System.out.println("id: " + msg.getId() + "   sender : " + msg.getSender().getUsername() + "   date: " + msg.getSentAt());
+            }
+        });
+
+
+    }
+
+    public static void printAllMsgDirectMsg(List<DirectMessage> messages) {
+        System.out.println("|*********************************");
+        System.out.println(">>> read msg: " + messages.size());
+        messages.forEach(msg -> {
+            if (msg.isRead()) {
+                System.out.println("id: " + msg.getId() + "   sender : " + msg.getSender().getUsername() + "   date: " + msg.getSentAt());
+            }
+        });
+
+    }
+
+    public static void viewMessage(DirectMessage directMessage) {
+        System.out.println("|*********************************");
+        System.out.println("      sender: " + directMessage.getSender().getUsername() + "              at: " + directMessage.getSentAt());
+        System.out.println("      message: " + directMessage.getMessage());
     }
 }

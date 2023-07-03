@@ -2,6 +2,7 @@ package twitter.util;
 
 public class Constant {
 
+    public static final String[] MESSAGE_TITLE = {"send direct","all message","unread message"};;
     public static String[] startupItem={"login","sign up","exit"};
     public static String[] profileItem={"tweets","home","new tweet","search and follow","direct","edit profile","sing out"};
     public static String[] editProfile={"change username","change email","change name","main menu"};

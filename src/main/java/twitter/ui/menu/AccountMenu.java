@@ -7,6 +7,7 @@ import twitter.util.Constant;
 import twitter.util.SecurityContext;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class AccountMenu {
 
@@ -14,10 +15,108 @@ public class AccountMenu {
     }
 
     static void checkDirect() {
+        Scanner sc = new Scanner(System.in);
+        User user = new User();
+        user.setId(SecurityContext.id);
+        List<DirectMessage> getAllMessage = ApplicationContext.getDirectMessage().findAllMessageByReceiverById(user);
+        while (true) {
+            Printer.printItem(Constant.MESSAGE_TITLE, "messages");
+            Printer.printDescription("Choose one item: ");
+            String selectedId = sc.next();
+            if (selectedId.equals("back"))
+                break;
+            switch (selectedId) {
+                case "1":
+                    sendDirect();
+                    break;
+                case "2":
+                    Printer.printAllMsgDirectMsg(getAllMessage);
+                    openMessage(getAllMessage);
+                    break;
+
+                case "3":
+                    Printer.printUnreadDirectMsg(getAllMessage);
+                    markAsReadMessage(getAllMessage);
+                    break;
+                default:
+                    Printer.printWarning("Bad entry format!");
+            }
+        }
+
+    }
+
+    private static void sendDirect() {
+        User mainUser = ApplicationContext.getUserService().findById(SecurityContext.id).get();
+        List<User> foundUsers = searchUser();
+        while (true) {
+            Scanner sc = new Scanner(System.in);
+            Printer.printDescription("Who you want to send direct: ");
+            String selectedUser = sc.next();
+            if (selectedUser.equals("back"))
+                break;
+            if (selectedUser.matches("\\d+"))
+                foundUsers.forEach(user -> {
+                    if (Objects.equals(user.getId(), Long.valueOf(selectedUser))) {
+                        Printer.printDescription("Write your message: ");
+                        sc.nextLine();
+                        String message = sc.nextLine();
+                        if (!message.trim().isEmpty()) {
+                            DirectMessage directMessage = new DirectMessage();
+                            directMessage.setMessage(message);
+                            directMessage.setRead(false);
+                            directMessage.setSender(mainUser);
+                            directMessage.setReceiver(user);
+                            ApplicationContext.getDirectMessage().saveOrUpdate(directMessage);
+                        }else Printer.printWarning("Empty message can't be send...");
+                    }
+                });
+            else
+                Printer.printWarning("Bad format... try again!");
+        }
+    }
+
+    private static void openMessage(List<DirectMessage> getAllMessage) {
+        Scanner sc = new Scanner(System.in);
+        while (true) {
+            Printer.printDescription("Enter the message id to show in detail: ");
+            String messageId = sc.next();
+            if (messageId.trim().matches("\\d+")) {
+                DirectMessage directMessage = getAllMessage.stream().filter(
+                                msg -> Objects.equals(msg.getId(), Long.valueOf(messageId)))
+                        .findFirst().orElse(null);
+                assert directMessage != null;
+                Printer.viewMessage(directMessage);
+            }
+            if (messageId.equals("back"))
+                break;
+
+        }
+    }
+
+    private static void markAsReadMessage(List<DirectMessage> getAllMessage) {
+        Scanner sc = new Scanner(System.in);
+        while (true) {
+            Printer.printDescription("Enter the message id to show in detail: ");
+            String messageId = sc.next();
+            if (messageId.trim().matches("\\d+")) {
+                DirectMessage directMessage = getAllMessage.stream().filter(
+                                msg -> Objects.equals(msg.getId(), Long.valueOf(messageId)))
+                        .findFirst().orElse(null);
+                if (directMessage!=null){
+                Printer.viewMessage(directMessage);
+                directMessage.setRead(true);
+                ApplicationContext.getDirectMessage().saveOrUpdate(directMessage);
+                }
+            }
+            if (messageId.equals("back"))
+                break;
+
+        }
+
     }
 
     static void createNewTweet() {
-        //        User user = ApplicationContext.getUserService().findById(SecurityContext.id).get();
+        //User user = ApplicationContext.getUserService().findById(SecurityContext.id).get();
         User user = new User();
         user.setId(SecurityContext.id);
         Scanner scanner = new Scanner(System.in);
@@ -78,7 +177,6 @@ public class AccountMenu {
                         ApplicationContext.getTweetService().findById(Long.valueOf(tweetId));
                 if (foundTweet.isPresent())
                     setCommentOrLike(foundTweet);
-
             }
             if (tweetId.equals("back"))
                 break;
@@ -109,10 +207,7 @@ public class AccountMenu {
                     Printer.printWarning("Wrong input!");
                     break;
             }
-
-
         }
-
     }
 
 
@@ -136,34 +231,39 @@ public class AccountMenu {
         ApplicationContext.getLikeService().saveOrUpdate(new Like(likeOwner, tweet));
     }
 
-    public static void searchAndFollow() {
+    public static List<User> searchUser() {
         while (true) {
             Printer.printDescription("Enter firstname/lastname/username : ");
             Scanner sc = new Scanner(System.in);
             String title = sc.next();
+            if (title.trim().isEmpty())
+                continue;
             List<User> listOfFoundUser = ApplicationContext.getUserService().findUser(title);
             Printer.printUser(listOfFoundUser);
+            return listOfFoundUser;
+        }
+    }
+
+    public static void setFollowerAndFollowing() {
+        User mainUser = ApplicationContext.getUserService().findById(SecurityContext.id).get();
+        List<User> foundUsers = searchUser();
+        while (true) {
+            Scanner sc = new Scanner(System.in);
             Printer.printDescription("Who you want to follow: ");
             String selectedUser = sc.next();
             if (selectedUser.equals("back"))
                 break;
             if (selectedUser.matches("\\d+"))
-                listOfFoundUser.forEach(user -> {
-                    if (Objects.equals(user.getId(), Long.valueOf(selectedUser)))
-                        setFollowTable(user);
+                foundUsers.forEach(user -> {
+                    if (Objects.equals(user.getId(), Long.valueOf(selectedUser))) {
+                        mainUser.getFollowing().add(user);
+                        user.getFollower().add(mainUser);
+                        ApplicationContext.getUserService().saveOrUpdate(mainUser);
+                        ApplicationContext.getUserService().saveOrUpdate(user);
+                    }
                 });
             else
                 Printer.printWarning("Bad format... try again!");
-
         }
-    }
-
-    private static void setFollowTable(User user) {
-        User mainUser = ApplicationContext.getUserService().findById(SecurityContext.id).get();
-        mainUser.getFollowing().add(user);
-        user.getFollower().add(mainUser);
-
-        ApplicationContext.getUserService().saveOrUpdate(mainUser);
-        ApplicationContext.getUserService().saveOrUpdate(user);
     }
 }
